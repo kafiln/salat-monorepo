@@ -1,0 +1,53 @@
+version: '3'
+services:
+  database:
+    container_name: $POSTGRES_HOST
+    image: postgres:10.5-alpine
+    ports:
+      - $POSTGRES_PORT:5432
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  server:
+    restart: always
+    container_name: server
+    build:
+      context: ./packages/server
+      dockerfile: Dockerfile
+    environment:
+    #   # DB
+    #   - POSTGRES_DB=$POSTGRES_DB
+    #   - POSTGRES_USER=$POSTGRES_USER
+    #   - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    #   - POSTGRES_HOST=$POSTGRES_HOST
+    #   - POSTGRES_PORT=$POSTGRES_PORT
+    #   # SERVER
+      - SERVER_PORT=$SERVER_PORT
+    #   - SERVER_ENV=$SERVER_ENV
+    #   - SERVER_APP=$SERVER_APP
+    #   - SERVER_HOST=$SERVER_HOST
+    ports:
+      - 5000:3000
+    volumes:
+      - ./packages/server:/app
+    # depends_on:
+    # - $POSTGRES_HOST
+
+  client:
+    container_name: client
+    build:
+      context: ./packages/client
+      dockerfile: Dockerfile
+    environment:
+        - CLIENT_PORT=$CLIENT_PORT
+    volumes:
+      - './packages/client:/app'
+      - '/app/node_modules'
+    ports:
+    - $CLIENT_PORT:$CLIENT_PORT
+    depends_on:
+      - 'server'

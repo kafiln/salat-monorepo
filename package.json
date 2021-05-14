@@ -1,0 +1,12 @@
+{
+  "name": "salat",
+  "version": "0.1.0",
+  "description": "Prayer times for cities in Morocco",
+  "main": "index.js",
+  "repository": "https://github.com/kafiln/salat.git",
+  "author": "Kafil Nasdami <kafil.nasdami@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
